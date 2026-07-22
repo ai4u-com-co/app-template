@@ -1,0 +1,30 @@
+{
+  "name": "ai4u-app-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai4u/design-system": "github:donchelo/sistemaDiseno#v1.2.1",
+    "@ai4u/mc-sso": "github:ai4u-com-co/mc-sso#v1.1.0",
+    "@ai4u/platform": "github:ai4u-com-co/platform#v0.3.0",
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
