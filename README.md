@@ -8,7 +8,7 @@ Reemplaza a `ai4u-module-template` (se archivará con OK de Mariano).
 | Pieza | Dónde | Qué hace |
 |---|---|---|
 | Identidad del servicio | `lib/service.ts` | `SERVICE_ID`: el **único** lugar donde se escribe el id de la app |
-| Env vars | `lib/env.ts` | Punto único de lectura. Nombre canónico → alias legado (con aviso, sin valores). `loadEnv` valida todo al arrancar |
+| Env vars | `lib/env.ts` → `@ai4u/config/env` | Punto único de lectura. El contrato de nombres (canónico → alias legado con aviso, llaves por tenant) vive en `@ai4u/config` v0.2.0; `lib/env.ts` solo agrega que `loadEnv` sea estricto únicamente en Production de Vercel |
 | SSO de Mission Control | `app/api/mc-auth/route.ts` | Recibe el handoff de MC (`verifyMcToken` + `createSession` de `@ai4u/mc-sso`) y deja la cookie `mc_session` |
 | Rutas de API | `app/api/example/route.ts` | `withApiHandler` + `requireModule` + llamada al gateway SAP con el tenant **de la sesión** |
 | Gateway SAP | `lib/sap-gateway.ts` | `SAP_BACKEND_URL` + `X-API-Key` = `{TENANT}_SAP_API_KEY`. Sin tenant por defecto |

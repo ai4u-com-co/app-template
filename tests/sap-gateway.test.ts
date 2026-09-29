@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { __resetEnvWarnings } from "@/lib/env"
+import { resetEnvWarnings } from "@/lib/env"
 import { buildGatewayUrl, sapGatewayFetch, toGatewayTenant } from "@/lib/sap-gateway"
 
-beforeEach(() => __resetEnvWarnings(() => {}))
+beforeEach(() => {
+  resetEnvWarnings()
+  vi.spyOn(console, "warn").mockImplementation(() => {})
+})
 
 function okFetch(body: unknown, status = 200) {
   return vi.fn(async (_url: string | URL | Request, _init?: RequestInit) =>
