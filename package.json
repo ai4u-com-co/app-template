@@ -18,7 +18,7 @@
     "@ai4u/config": "github:ai4u-com-co/config#v0.2.0",
     "@ai4u/design-system": "github:ai4u-com-co/sistemaDiseno#v1.4.0",
     "@ai4u/mc-sso": "github:ai4u-com-co/mc-sso#v1.2.0",
-    "@ai4u/platform": "github:ai4u-com-co/platform#v0.5.0",
+    "@ai4u/platform": "github:ai4u-com-co/platform#v0.6.1",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"
