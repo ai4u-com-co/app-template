@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { resetEnvWarnings } from "@/lib/env"
 import { buildGatewayUrl, sapGatewayFetch, toGatewayTenant } from "@/lib/sap-gateway"
+import { SERVICE_ID } from "@/lib/service"
 
 beforeEach(() => {
   resetEnvWarnings()
@@ -95,6 +96,23 @@ describe("sapGatewayFetch", () => {
     await expect(
       sapGatewayFetch("tamaprint", "health", {}, { env, fetch: failing as unknown as typeof fetch }),
     ).rejects.toMatchObject({ code: "GATEWAY_UNREACHABLE", httpStatus: 502 })
+  })
+
+  it("se identifica ante el gateway con x-consumer = SERVICE_ID de lib/service.ts", async () => {
+    const fetchMock = okFetch({})
+    await sapGatewayFetch("tamaprint", "health", {}, { env, fetch: fetchMock })
+    expect(new Headers(fetchMock.mock.calls[0][1]?.headers).get("x-consumer")).toBe(SERVICE_ID)
+  })
+
+  it("x-consumer respeta el override por env SERVICE_ID (y no lo pisa el caller)", async () => {
+    const fetchMock = okFetch({})
+    await sapGatewayFetch(
+      "tamaprint",
+      "health",
+      { headers: { "x-consumer": "otro" } },
+      { env: { ...env, SERVICE_ID: "mi-app-preview" }, fetch: fetchMock },
+    )
+    expect(new Headers(fetchMock.mock.calls[0][1]?.headers).get("x-consumer")).toBe("mi-app-preview")
   })
 
   it("acepta alias legado de la URL del gateway", async () => {

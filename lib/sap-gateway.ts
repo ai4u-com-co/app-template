@@ -10,9 +10,13 @@
  *     minúsculas ("tamaprint", "flexoimpresos").
  *   - Auth: header `X-API-Key` con la llave del tenant; el gateway rechaza la
  *     llave si no corresponde al tenant de la URL.
+ *   - Atribución: header `x-consumer` = id de esta app (resolveServiceId de
+ *     lib/service.ts: env SERVICE_ID o la constante). Solo sirve para saber quién
+ *     llamó en platform_logs del gateway; nunca autoriza ni cambia permisos.
  */
 import { InfrastructureError, ExternalServiceError } from "@ai4u/platform/errors"
 import { getGatewayApiKey, normalizeTenant, readEnv, type EnvSource, type GatewayKeySource } from "@/lib/env"
+import { resolveServiceId } from "@/lib/service"
 
 export interface GatewayDeps {
   env?: EnvSource
@@ -82,6 +86,7 @@ export async function sapGatewayFetch<T = unknown>(
   const url = buildGatewayUrl(baseUrl, tenantId, path)
   const headers = new Headers(init.headers)
   headers.set("X-API-Key", apiKey.key)
+  headers.set("x-consumer", resolveServiceId(env))
   if (!headers.has("accept")) headers.set("accept", "application/json")
 
   let res: Response

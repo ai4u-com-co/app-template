@@ -3,6 +3,7 @@ import { verifyMcToken, createSession } from "@ai4u/mc-sso"
 import { withApiHandler } from "@ai4u/platform/http"
 import { readEnv } from "@/lib/env"
 import { SERVICE_ID } from "@/lib/service"
+import { SESSION_COOKIE, SESSION_TTL_MS } from "@/lib/session"
 
 /**
  * Receptor del handoff SSO de Mission Control (patrón de ai4u-kpis).
@@ -13,8 +14,13 @@ import { SERVICE_ID } from "@/lib/service"
  * cada ruta (tenant + permisos embebidos, sin tocar la BD).
  *
  * El tenant sale del token firmado por MC — esta app no tiene tenant propio.
+ * La sesión dura 8 h (SESSION_TTL_MS en lib/session.ts, FLX-091).
+ *
+ * TODO(mc-sso 1.2.0): cuando se publique, reemplazar este handler completo por
+ * `createMcAuthHandler` de @ai4u/mc-sso (firma según su README) y la cookie por
+ * `MC_SESSION_COOKIE`, para no mantener una copia más del receptor. Conservar el
+ * TTL de 8 h y los casos de tests/mc-auth.test.ts. v1.1.0 no trae ese helper.
  */
-const SESSION_TTL_MS = 60 * 60 * 1000 // 1 hora
 
 export const POST = withApiHandler(async (req) => {
   const form = await req.formData()
@@ -38,7 +44,7 @@ export const POST = withApiHandler(async (req) => {
 
   // 303 para que el navegador siga el redirect como GET (no re-POST a "/").
   const res = NextResponse.redirect(new URL("/", req.url), 303)
-  res.cookies.set("mc_session", sessionToken, {
+  res.cookies.set(SESSION_COOKIE, sessionToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

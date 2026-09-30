@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "env:example": "node scripts/env-example.mjs",
+    "env:check": "node scripts/env-example.mjs --check",
+    "changelog:init": "node scripts/changelog-init.mjs"
   },
   "dependencies": {
     "@ai4u-labs/changelog-client": "^0.3.0",

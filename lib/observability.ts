@@ -1,6 +1,6 @@
 import { configureTransport, setServiceName } from "@ai4u/platform/logger"
 import { loadEnv, readEnv } from "@/lib/env"
-import { SERVICE_ID } from "@/lib/service"
+import { resolveServiceId } from "@/lib/service"
 
 /**
  * Arranca la observabilidad central: nombra el servicio en los logs y, si hay
@@ -19,7 +19,7 @@ export function bootstrapObservability(): void {
     optional: ["PLATFORM_INGEST_URL", "INGEST_SECRET", "SAP_BACKEND_URL", "SERVICE_ID"],
   })
 
-  setServiceName(env.SERVICE_ID ?? SERVICE_ID)
+  setServiceName(resolveServiceId())
   const endpoint = env.PLATFORM_INGEST_URL
   const secret = env.INGEST_SECRET
   if (endpoint && secret) {
